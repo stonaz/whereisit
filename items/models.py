@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.contrib.gis.db import models
 
+from profiles.models import Profile
+
 class Category(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
@@ -14,7 +16,7 @@ class Item(models.Model):
     # world borders shapefile.
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
-    owner= models.ForeignKey(User,related_name="sharer")
+    owner= models.ForeignKey(Profile,related_name="sharer")
     category = models.ForeignKey(Category,related_name="category")
 
     # GeoDjango-specific: a geometry field (MultiPolygonField), and

@@ -5,3 +5,5 @@ settings.py
 settings_deployment.py
 python
 ./static
+profiles/migrations
+migrations
