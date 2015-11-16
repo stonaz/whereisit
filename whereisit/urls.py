@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/profiles/', include('profiles.urls')),
     url(r'^api/items/', include('items.urls')),
+    url(r'^api/categories/', include('categories.urls')),
+
 ]

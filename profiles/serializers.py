@@ -1,7 +1,10 @@
 from django.contrib.auth.models import User
+
 from rest_framework import routers, serializers, viewsets, status
 from rest_framework.response import Response
+
 from profiles.models import Profile
+from categories.models import Category
 # Serializers define the API representation.
 
 def check_passwd(password,confirm_password):

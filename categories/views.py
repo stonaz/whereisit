@@ -8,15 +8,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .models import Item
+from .models import Category
 from serializers import *
+
+from items.views import ItemsListCreate
 
 
 # Create your views here.
 
-class ItemsListCreate(generics.ListCreateAPIView):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+class CategoriesListCreate(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     
 class CategoryItemListMixin(object):
     category = None
@@ -44,7 +46,9 @@ class CategoryItemListMixin(object):
         self.get_category()
         # get items of category
         items = self.get_items(request, *args, **kwargs)
-        return Response(items)
+        content = CategorySerializer(self.category, context=self.get_serializer_context()).data
+        content['items'] = self.get_items(request, *args, **kwargs)
+        return Response(content)
     
     
 class CategoryItemsList(CategoryItemListMixin, ItemsListCreate):
