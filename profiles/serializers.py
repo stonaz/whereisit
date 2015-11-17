@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 
 from rest_framework import routers, serializers, viewsets, status
+from rest_framework.validators import UniqueValidator
 from rest_framework.response import Response
 
 from profiles.models import Profile
@@ -14,7 +15,7 @@ def check_passwd(password,confirm_password):
 
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username')
-    email = serializers.CharField(allow_blank=False)
+    email = serializers.EmailField(    validators=[UniqueValidator(queryset=Profile.objects.all())])
     #is_staff = serializers.CharField(source='user.is_staff')
     password = serializers.CharField(source='user.password', write_only=True)
     confirm_password = serializers.CharField(allow_blank=False, write_only=True)
@@ -45,7 +46,6 @@ class UserSerializer(serializers.ModelSerializer):
         check_passwd(password,confirm_password)
         user = User.objects.create_user(username=user.get('username'), email= user.get('email'), password=user.get('password'))
         profile = Profile.objects.create(user=user,poi=attrs.get('poi'),email=attrs.get('email'))
-        #user = User.objects.create_user(username='stefano', email= 'essetizeta@gmail.com', password='yuyuyuyu')
         p = Profile(user=user)
         print p
         return Profile(user=user)
@@ -60,7 +60,6 @@ class UserSerializer(serializers.ModelSerializer):
         if instance is not None:
             user = attrs.get('user')
             print instance.user.email
-            #instance.user.email = user.get('email', instance.user.email)
             instance.user.email = 'pippo@topolinia.net'
             instance.poi = attrs.get('poi', instance.poi)
             instance.user.password = attrs.get('user.password', instance.user.password)
@@ -71,7 +70,6 @@ class UserSerializer(serializers.ModelSerializer):
         user = attrs.get('user')
         user = User.objects.create_user(username=user.get('username'), email= user.get('email'), password=user.get('password'))
         profile = Profile.objects.create(user=user,poi=attrs.get('poi'))
-        #user = User.objects.create_user(username='stefano', email= 'essetizeta@gmail.com', password='yuyuyuyu')
         p = Profile(user=user)
         print p
         return Profile(user=user)
@@ -79,7 +77,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UpdateUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     #poi = serializers.CharField(allow_blank=True)
-    #email = serializers.EmailField(allow_blank=True)
+    email = serializers.EmailField(    validators=[UniqueValidator(queryset=Profile.objects.all())])
     ##is_staff = serializers.CharField(source='user.is_staff')
     #password = serializers.CharField(source='user.password', write_only=True)
     #confirm_password = serializers.CharField(allow_blank=False, write_only=True)
@@ -88,14 +86,3 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('poi', 'username', 'email')
         
-    #def update(self, instance, validated_data):
-    #    print 'UPDATE'
-    #    print instance.email
-    #    print validated_data
-    #    
-    #    instance.email = validated_data.get('email', instance.email)
-    #    print instance.email
-    #    instance.poi = validated_data.get('poi', instance.poi)
-    #    print instance.poi
-    #    instance.save()
-    #    return instance

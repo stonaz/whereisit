@@ -16,9 +16,18 @@ from items.views import ItemsListCreate
 
 # Create your views here.
 
-class CategoriesListCreate(generics.ListCreateAPIView):
+class CategoriesList(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    authentication_classes = (authentication.SessionAuthentication,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    
+class CategoriesCreate(generics.CreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    authentication_classes = (authentication.SessionAuthentication,)
+    permission_classes = (permissions.IsAdminUser,)
+    
     
 class CategoryItemListMixin(object):
     category = None
@@ -54,8 +63,6 @@ class CategoryItemListMixin(object):
 class CategoryItemsList(CategoryItemListMixin, ItemsListCreate):
     """
     Retrieve list of items of the specified category
-    Parameters:
-     * `search=<word>`: search <word> in name of nodes of specified layer
-     * `limit=<n>`: specify number of items per page (defaults to 40)
-    """
+    
+        """
     pass

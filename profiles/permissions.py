@@ -35,3 +35,5 @@ class IsProfileOwner(permissions.IsAuthenticated):
             return request.user.id == user.id
         
         return True
+    
+    

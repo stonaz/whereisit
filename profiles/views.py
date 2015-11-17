@@ -22,6 +22,7 @@ class ProfileListCreate(generics.ListCreateAPIView):
     queryset = Profile.objects.all()
     serializer_class = UserSerializer
     
+    
 class ProfileDetails(generics.RetrieveUpdateAPIView):
     queryset = Profile.objects.all()
     serializer_class = UpdateUserSerializer
